@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SVG</title>
+  <style>
+  #svg circle{
+    stroke-dashoffset:0;
+    stroke:#666;
+    stroke-width:1em;
+    transition: stroke-dashoffset 1s linear;
+  }
+  #svg #bar{
+    stroke:#ff9f1e;
+    stroke-dashoffset:565.48;
+  }
+  #cont{
+    display: block;
+    height: 200px;
+    width: 200px;
+    margin: 2em auto;
+    box-shadow: 0 0 1em black;
+    border-radius: 50%;
+    position: relative;
+  }
+  #cont:after{
+    position: absolute;
+    display: block;
+    height: 160px;
+    width: 160px;
+    left: 50%;
+    top: 50%;
+    text-align: center;
+    line-height: 160px;
+    margin-top: -80px;
+    margin-left: -80px;
+    content: attr(data-pct)"%";
+    font-size: 2em;
+    text-shadow: 0 0 0.5em black;
+  }
+  html {
+     height: 100%;
+   }
+  body {
+    font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+     background: url(http://www.jmchristensendesign.com/wp-content/themes/jmcdsn/images/intro_default-background.jpg); color: #fff; height: 100%; padding-top: 2em; text-align: center;}
+  h1, h2{
+    margin: 0;
+    text-transform: uppercase;text-shadow: 0 0 0.5em black;
+  }
+  h2 {
+    font-weight: 300
+  }
+  input {
+    border: 1px solid #666; background: #333;
+    color: #fff; padding: 0.5em;
+    box-shadow: none;
+    outline: none !important;
+    margin: 1em  auto;
+    text-align: center;
+  }
+  </style>
+</head>
+<body>
+  <h1>SVG Circle Progress</h1>
+  <h2>Based off of css3 circle progress bar</h2>
+  <div id="cont" data-pct="0">
+  <svg id="svg"
+  width="200" height="200"
+  viewport="0 0 100 100"
+  xmlns="http://www.w3.org/2000/svg">
+  <!-- 利用circle标签来创建一个圆-->
+  <!-- cx 和 cy 属性定义圆点的 x 和 y 坐标。如果省略 cx 和 cy，圆的中心会被设置为 (0, 0) -->
+  <!-- fill 填充属性 -->
+  <!-- storke-dasharrary 属性可以做的东西还有很多很多。虽然我之前的示例是它只接受一组值作为参数，
+  但是它也可以接受多组值，并使用逗号来分隔每一组值。 -->
+  <!-- stroke-dashoffset 它可以让你设置需要图案延迟绘制的距离。它可以接受任何单位的值，同样的，
+  如果使用的是百分比，就是相对于当前视图的百分比。 -->
+    <circle cx="100"cy="100" r="90"
+    fill="transparent"
+    stroke-dasharray="565.48"
+    stroke-dashoffset="0"
+    >
+   </circle>
+   <circle id="bar" cx="100"cy="100" r="90"
+   fill="transparent"
+   stroke-dasharray="565.48"
+   stroke-dashoffset="0"
+   >
+  </circle>
+  </svg>
+  </div>
+  <label for="percent">Type a percent!</label>
+  <input type="text" id="percent" name="percent">
+  <script>
+  // 根据输入的百分比，动态改变圆环的样式
+  let cont=document.getElementById('cont');
+  let percentField=document.getElementById('percent');
+  percentField.addEventListener('change',function(){
+    let percent=parseInt(this.value);             // 获取输入的百分百
+    let circle=document.getElementById('bar');
+    if(isNaN(percent)){               // isNaN     is not a number
+      percent=100
+    }else{
+      let r=circle.getAttribute('r');      //获取圆的半径
+      let c=Math.PI*(r*2);                // 利用数学公式求算周长
+      if(percent<0){
+        percent=0
+      }
+      if(percent>100){
+        percent=100;
+      }
+    let pct=((100-percent)/100)*c;                 // 求得偏移量pct
+    circle.style.strokeDashoffset=pct;                //根据百分比，动态控制stroke-dashoffset属性，此处需要注意，偏移量是以起点为基点像前绘制，而不是向后!
+    cont.dataset.pct=percent;
+    }
+  })
+  </script>
+</body>
+</html>
